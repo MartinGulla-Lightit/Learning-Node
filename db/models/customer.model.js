@@ -16,6 +16,7 @@ const CustomerSchema = {
   lastName: {
     allowNull: false,
     type: DataTypes.STRING,
+    field: 'last_name',
   },
   phone: {
     allowNull: false,
@@ -27,11 +28,25 @@ const CustomerSchema = {
     defaultValue: Sequelize.NOW,
     field: 'created_at',
   },
+  userId: {
+    field: 'user_id',
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+    unique: true,
+  },
 }
 
 class Customer extends Model {
-  static associate() {
-    // define association here
+  static associate(models) {
+    this.belongsTo(models.User, {
+      as: 'user',
+    })
   }
 
   static config(sequelize) {
